@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>For You</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@500;700&family=Pacifico&family=Caveat:wght@600&family=Poppins:wght@400;600;700;800&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{height:100%}
+body{height:100%;overflow:hidden;font-family:'Quicksand','Trebuchet MS',sans-serif;background:#0d0510;-webkit-font-smoothing:antialiased;-webkit-text-size-adjust:100%}
+
+.scene{position:fixed;top:0;left:0;right:0;bottom:0;display:none;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;-webkit-flex-direction:column;flex-direction:column;overflow:hidden}
+.scene.active{display:-webkit-flex;display:flex}
+.fadeIn{-webkit-animation:fadeIn .6s ease both;animation:fadeIn .6s ease both}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+@keyframes heartbeat{0%,100%{transform:scale(1)}50%{transform:scale(1.25)}}
+@keyframes shimmer{to{background-position:200% center}}
+@keyframes borderGlow{0%,100%{background-position:0 50%}50%{background-position:100% 50%}}
+@keyframes wiggle{from{transform:rotate(-12deg)}to{transform:rotate(12deg)}}
+@keyframes glow{0%,100%{box-shadow:0 8px 28px rgba(255,45,123,.45)}50%{box-shadow:0 8px 48px rgba(255,45,123,.8),0 0 20px rgba(255,45,123,.3)}}
+@keyframes riseUp{0%{transform:translateY(0) rotate(0);opacity:0}8%{opacity:.1}88%{opacity:.1}100%{transform:translateY(-110vh) rotate(360deg);opacity:0}}
+@keyframes fly3d{0%{transform:translateY(110vh) rotateX(0) rotateY(0) rotateZ(0) scale(.4);opacity:0}6%{opacity:1}82%{opacity:1}100%{transform:translateY(-15vh) rotateX(360deg) rotateY(360deg) rotateZ(200deg) scale(1.15);opacity:0}}
+@keyframes confDrop{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(110vh) rotate(800deg);opacity:0}}
+@keyframes typeBlink{0%,100%{border-color:rgba(255,45,123,.8)}50%{border-color:transparent}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@keyframes boxBounce{from{transform:scale(.25) rotate(-8deg)}to{transform:scale(1) rotate(0)}}
+@keyframes cardPop{from{transform:scale(0) rotate(-5deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+@keyframes sparkPop{0%{transform:scale(0) rotate(0);opacity:0}50%{transform:scale(1.2) rotate(180deg);opacity:1}100%{transform:scale(1) rotate(360deg);opacity:1}}
+@keyframes floatSlow{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+
+.bg-heart{position:absolute;opacity:.1;font-size:18px;-webkit-animation:riseUp linear infinite;animation:riseUp linear infinite;pointer-events:none}
+
+/* ===== SCENE 1: PASSWORD ===== */
+#s-pass{background:linear-gradient(150deg,#1a0a1e,#2d1038 50%,#1a0a1e)}
+.pass-wrap{text-align:center;z-index:5;padding:24px;width:88%;max-width:400px}
+.pass-lock{font-size:64px;margin-bottom:16px;display:inline-block;animation:bob 2s ease-in-out infinite}
+.pass-title{font-family:'Pacifico',cursive;font-size:26px;color:#ff6b9d;margin-bottom:6px}
+.pass-hint{font-size:14px;color:rgba(255,180,200,.6);font-style:italic;margin-bottom:28px}
+.pass-dots{display:-webkit-flex;display:flex;-webkit-justify-content:center;justify-content:center;gap:12px;margin-bottom:24px}
+.pass-dot{width:18px;height:18px;border-radius:50%;border:2px solid rgba(255,107,157,.4);background:transparent;-webkit-transition:all .2s;transition:all .2s}
+.pass-dot.filled{background:#ff2d7b;border-color:#ff2d7b;box-shadow:0 0 12px rgba(255,45,123,.6)}
+.pass-dot.wrong{border-color:#ff4444;background:#ff4444;-webkit-animation:shake .4s ease;animation:shake .4s ease}
+.numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:260px;margin:0 auto}
+.num-btn{width:68px;height:68px;border-radius:50%;border:2px solid rgba(255,107,157,.25);background:rgba(255,255,255,.05);color:#ffd1dc;font-family:'Quicksand',sans-serif;font-size:26px;font-weight:700;cursor:pointer;-webkit-appearance:none;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;-webkit-transition:all .15s;transition:all .15s;margin:0 auto}
+.num-btn:active{background:rgba(255,45,123,.3);transform:scale(.9)}
+.num-btn.del{font-size:16px;color:#ff6b9d}
+.pass-wrong-msg{color:#ff6b9d;font-size:14px;font-weight:600;margin-top:14px;min-height:20px}
+
+/* ===== SCENE 2: LOVE LETTER ===== */
+#s-letter{background:linear-gradient(160deg,#fff5f9,#ffe0ec 40%,#ffd1dc 70%,#ffc0cb)}
+.letter-card{width:88%;max-width:440px;background:rgba(255,255,255,.92);border-radius:24px;padding:36px 28px;text-align:center;box-shadow:0 16px 50px rgba(255,100,150,.25);position:relative;z-index:5}
+.letter-card::before{content:'';position:absolute;top:-3px;left:-3px;right:-3px;bottom:-3px;border-radius:26px;z-index:-1;background:linear-gradient(45deg,#ff6b9d,#ff2d7b,#ffd700,#ff6b9d);background-size:300% 300%;animation:borderGlow 4s ease infinite}
+.letter-to{font-family:'Pacifico',cursive;font-size:18px;color:#ff2d7b;margin-bottom:16px;text-align:left}
+.letter-body{font-family:'Caveat',cursive;font-size:20px;color:#555;text-align:left;line-height:1.7;min-height:180px}
+.letter-body .cursor{display:inline-block;width:2px;height:22px;background:#ff2d7b;margin-left:2px;vertical-align:text-bottom;animation:typeBlink .8s infinite}
+.letter-sign{font-family:'Dancing Script',cursive;font-size:24px;color:#ff2d7b;text-align:right;margin-top:16px;opacity:0}
+.letter-sign.show{animation:fadeUp .6s ease both}
+.letter-next{margin-top:24px;padding:14px 44px;border:none;border-radius:50px;background:linear-gradient(135deg,#ff2d7b,#ff6b9d);color:#fff;font-family:'Quicksand',sans-serif;font-size:18px;font-weight:700;cursor:pointer;box-shadow:0 8px 24px rgba(255,45,123,.4);-webkit-appearance:none;opacity:0;transform:translateY(10px);-webkit-transition:all .4s;transition:all .4s}
+.letter-next.show{opacity:1;transform:translateY(0)}
+.letter-next:active{transform:scale(.93)}
+
+/* ===== SCENE 3: THE ASK ===== */
+#s-ask{background:linear-gradient(160deg,#fff5f9,#ffe0ec 40%,#ffd1dc 70%,#ffc0cb)}
+.card{position:relative;z-index:5;width:88%;max-width:420px;background:rgba(255,255,255,.9);border-radius:28px;padding:44px 28px 40px;text-align:center;box-shadow:0 16px 50px rgba(255,100,150,.28);animation:cardPop .8s cubic-bezier(.34,1.56,.64,1) both}
+.card::before{content:'';position:absolute;top:-3px;left:-3px;right:-3px;bottom:-3px;border-radius:30px;z-index:-1;background:linear-gradient(45deg,#ff6b9d,#ff2d7b,#ffd700,#ff6b9d);background-size:300% 300%;animation:borderGlow 4s ease infinite}
+.card-icon{font-size:52px;margin-bottom:6px;display:inline-block;animation:bob 2.4s ease-in-out infinite}
+.card-hey{font-family:'Pacifico',cursive;font-size:19px;color:#ff2d7b;margin-bottom:4px}
+.card-name{font-family:'Dancing Script',cursive;font-size:50px;font-weight:700;color:#ff2d7b}
+.card-q{font-size:22px;font-weight:700;color:#666;margin:18px 0 32px;line-height:1.45}
+.card-q em{font-style:normal;color:#ff2d7b;font-size:24px}
+.btns{display:-webkit-flex;display:flex;gap:16px;-webkit-justify-content:center;justify-content:center}
+.btn{padding:15px 42px;border:none;border-radius:50px;font-family:'Quicksand',sans-serif;font-size:19px;font-weight:700;cursor:pointer;-webkit-appearance:none}
+.btn:active{transform:scale(.93)}
+.btn-y{background:linear-gradient(135deg,#ff2d7b,#ff6b9d);color:#fff;box-shadow:0 8px 24px rgba(255,45,123,.4)}
+.btn-n{background:#eee;color:#aaa}
+
+/* ===== OOPS ===== */
+#oops{position:fixed;top:0;left:0;right:0;bottom:0;display:none;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;background:rgba(255,210,225,.6);z-index:60}
+#oops.show{display:-webkit-flex;display:flex}
+.oops-box{width:86%;max-width:400px;background:#fff;border-radius:28px;padding:40px 26px 36px;text-align:center;box-shadow:0 22px 70px rgba(255,45,123,.3);animation:boxBounce .5s cubic-bezier(.34,1.56,.64,1)}
+.oops-face{font-size:72px;margin-bottom:10px;display:inline-block;animation:wiggle .55s ease-in-out infinite alternate}
+.oops-title{font-family:'Pacifico',cursive;font-size:34px;color:#ff2d7b;margin-bottom:10px}
+.oops-msg{font-size:17px;color:#888;font-weight:600;line-height:1.55;margin-bottom:4px}
+.oops-sub{font-family:'Dancing Script',cursive;font-size:20px;color:#e74c6f;font-weight:700;margin-bottom:18px}
+.oops-ps{font-size:13.5px;color:#ff2d7b;font-weight:600;font-style:italic;margin-bottom:24px;opacity:0;animation:fadeIn .7s .45s forwards}
+.btn-only{padding:15px 54px;border:none;border-radius:50px;background:linear-gradient(135deg,#ff2d7b,#ff4d8d);color:#fff;font-family:'Quicksand',sans-serif;font-size:21px;font-weight:700;cursor:pointer;box-shadow:0 8px 28px rgba(255,45,123,.45);animation:glow 1.6s ease-in-out infinite;-webkit-appearance:none}
+.btn-only:active{transform:scale(.93)}
+
+/* ===== SCENE 4: SCRATCH ===== */
+#s-scratch{background:linear-gradient(160deg,#fff5f9,#ffe0ec 50%,#ffd1dc)}
+.scratch-wrap{text-align:center;z-index:5;padding:20px;width:90%;max-width:420px}
+.scratch-title{font-family:'Pacifico',cursive;font-size:24px;color:#ff2d7b;margin-bottom:6px}
+.scratch-sub{font-size:15px;color:#999;font-weight:600;margin-bottom:24px}
+.scratch-container{position:relative;width:300px;height:200px;margin:0 auto 24px;border-radius:20px;overflow:hidden;box-shadow:0 10px 40px rgba(255,45,123,.25)}
+.scratch-reveal{position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#1a0a1e,#2d1038);display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;-webkit-flex-direction:column;flex-direction:column;padding:20px;text-align:center}
+.scratch-promise-icon{font-size:40px;margin-bottom:10px}
+.scratch-promise{font-family:'Dancing Script',cursive;font-size:22px;color:#ffd700;line-height:1.4;text-shadow:0 0 20px rgba(255,215,0,.4)}
+.scratch-promise small{font-family:'Quicksand',sans-serif;font-size:13px;color:rgba(255,200,220,.7);display:block;margin-top:8px}
+.scratch-canvas{position:absolute;top:0;left:0;width:100%;height:100%;cursor:pointer;border-radius:20px}
+.scratch-hint{font-size:13px;color:#bbb;font-style:italic;margin-bottom:20px;min-height:20px}
+.scratch-next{padding:14px 44px;border:none;border-radius:50px;background:linear-gradient(135deg,#ff2d7b,#ff6b9d);color:#fff;font-family:'Quicksand',sans-serif;font-size:18px;font-weight:700;cursor:pointer;box-shadow:0 8px 24px rgba(255,45,123,.4);-webkit-appearance:none;opacity:0;-webkit-transition:opacity .4s;transition:opacity .4s}
+.scratch-next.show{opacity:1}
+.scratch-next:active{transform:scale(.93)}
+
+/* ===== SCENE 5: NYKAA GIFT CARD ===== */
+#s-gift{background:linear-gradient(160deg,#fdf2f8,#fce7f3 40%,#fbcfe8 70%,#f9a8d4)}
+.gift-wrap{text-align:center;z-index:5;padding:20px;width:92%;max-width:420px}
+.gift-intro{font-family:'Pacifico',cursive;font-size:22px;color:#ff2d7b;margin-bottom:4px;animation:fadeUp .7s both}
+.gift-intro-sub{font-size:14px;color:#999;margin-bottom:22px;animation:fadeUp .7s .2s both}
+
+/* The Nykaa Card */
+.nykaa-card{
+  position:relative;width:100%;aspect-ratio:1.6/1;border-radius:20px;overflow:hidden;
+  background:linear-gradient(135deg,#fc2779 0%,#e91e90 30%,#d4145a 60%,#fc2779 100%);
+  box-shadow:0 20px 60px rgba(252,39,121,.4),0 0 0 1px rgba(255,255,255,.15);
+  animation:cardPop .8s cubic-bezier(.34,1.56,.64,1) both;
+  margin-bottom:20px;
+}
+.nykaa-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;bottom:0;
+  background:
+    radial-gradient(ellipse at 20% 50%,rgba(255,255,255,.12) 0%,transparent 60%),
+    radial-gradient(ellipse at 80% 20%,rgba(255,255,255,.08) 0%,transparent 50%),
+    radial-gradient(ellipse at 60% 90%,rgba(255,215,0,.06) 0%,transparent 40%);
+  pointer-events:none;
+}
+.nykaa-card::after{
+  content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+  background:repeating-linear-gradient(45deg,transparent,transparent 8px,rgba(255,255,255,.02) 8px,rgba(255,255,255,.02) 16px);
+  pointer-events:none;
+}
+.nykaa-inner{position:relative;z-index:2;padding:24px 22px;height:100%;display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column;-webkit-justify-content:space-between;justify-content:space-between}
+.nykaa-top{display:-webkit-flex;display:flex;-webkit-justify-content:space-between;justify-content:space-between;-webkit-align-items:flex-start;align-items:flex-start}
+.nykaa-logo{font-family:'Poppins',sans-serif;font-size:32px;font-weight:800;color:#fff;letter-spacing:3px;text-shadow:0 2px 10px rgba(0,0,0,.2)}
+.nykaa-badge{background:rgba(255,255,255,.2);border-radius:12px;padding:4px 12px;font-size:11px;color:#fff;font-weight:700;letter-spacing:1px;-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.nykaa-mid{text-align:left}
+.nykaa-amount{font-family:'Poppins',sans-serif;font-size:38px;font-weight:800;color:#fff;text-shadow:0 2px 15px rgba(0,0,0,.2)}
+.nykaa-amount span{font-size:22px;font-weight:600;vertical-align:top;margin-right:2px}
+.nykaa-label{font-family:'Quicksand',sans-serif;font-size:13px;color:rgba(255,255,255,.75);font-weight:600;letter-spacing:1px;margin-top:2px}
+.nykaa-bottom{display:-webkit-flex;display:flex;-webkit-justify-content:space-between;justify-content:space-between;-webkit-align-items:flex-end;align-items:flex-end}
+.nykaa-exp{font-size:11px;color:rgba(255,255,255,.6);font-weight:600}
+.nykaa-heart{font-size:20px;animation:floatSlow 2s ease-in-out infinite}
+
+/* Gift card details */
+.gift-details{
+  background:rgba(255,255,255,.9);border-radius:18px;padding:20px;
+  box-shadow:0 8px 30px rgba(255,45,123,.15);margin-bottom:18px;text-align:left;
+  animation:fadeUp .7s .4s both;
+}
+.gift-row{display:-webkit-flex;display:flex;-webkit-justify-content:space-between;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,45,123,.08)}
+.gift-row:last-child{border-bottom:none}
+.gift-label{font-size:13px;color:#999;font-weight:600}
+.gift-value{font-size:14px;color:#333;font-weight:700;text-align:right;word-break:break-all}
+.gift-value.pin{color:#ff2d7b;font-size:18px;letter-spacing:2px}
+
+.gift-btns{display:-webkit-flex;display:flex;gap:12px;-webkit-justify-content:center;justify-content:center;-webkit-flex-wrap:wrap;flex-wrap:wrap;animation:fadeUp .7s .6s both}
+.gift-btn{padding:14px 32px;border:none;border-radius:50px;font-family:'Quicksand',sans-serif;font-size:16px;font-weight:700;cursor:pointer;-webkit-appearance:none}
+.gift-btn:active{transform:scale(.93)}
+.gift-btn-dl{background:linear-gradient(135deg,#ff2d7b,#ff6b9d);color:#fff;box-shadow:0 6px 20px rgba(255,45,123,.35)}
+.gift-btn-next{background:#fff;color:#ff2d7b;border:2px solid #ff2d7b;box-shadow:0 4px 15px rgba(255,45,123,.12)}
+
+/* ===== SCENE 6: CELEBRATION ===== */
+#s-celeb{background:linear-gradient(150deg,#1a0a1e,#2d1038 35%,#1a0a1e 65%,#0d0510);z-index:100}
+.celeb-wrap{position:relative;z-index:10;text-align:center;padding:20px}
+.celeb-top{font-size:64px;margin-bottom:14px;display:inline-block;animation:heartbeat 1s ease-in-out infinite}
+.celeb-love{font-family:'Dancing Script',cursive;font-size:46px;font-weight:700;color:#fff;text-shadow:0 0 36px rgba(255,107,157,.8),0 0 72px rgba(255,45,123,.35);margin-bottom:8px;line-height:1.25}
+.celeb-kutti{font-family:'Dancing Script',cursive;font-size:42px;font-weight:700;color:#ffd700;text-shadow:0 0 28px rgba(255,215,0,.55);margin-bottom:14px}
+.celeb-forever{font-family:'Pacifico',cursive;font-size:26px;background:linear-gradient(90deg,#ff6b9d,#ffd700,#ff6b9d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:200% auto;animation:shimmer 3s linear infinite}
+.celeb-ps{font-size:14.5px;color:rgba(255,200,220,.75);font-weight:600;font-style:italic;margin-top:28px;max-width:340px;line-height:1.5}
+.heart3d{position:absolute;pointer-events:none;-webkit-animation:fly3d linear forwards;animation:fly3d linear forwards;z-index:4}
+.confetti{position:absolute;top:-12px;-webkit-animation:confDrop linear forwards;animation:confDrop linear forwards;pointer-events:none;z-index:6}
+
+/* Scroll for gift scene */
+#s-gift.active{overflow-y:auto;-webkit-overflow-scrolling:touch}
+
+@media(max-width:400px){
+  .card-name{font-size:40px}.card-q{font-size:19px}.card-q em{font-size:21px}
+  .btn{padding:14px 34px;font-size:17px}
+  .celeb-love{font-size:34px}.celeb-kutti{font-size:32px}.celeb-forever{font-size:20px}
+  .oops-box{padding:32px 20px 30px}.oops-face{font-size:60px}.oops-title{font-size:28px}
+  .letter-body{font-size:18px}
+  .scratch-container{width:260px;height:175px}.scratch-promise{font-size:19px}
+  .num-btn{width:60px;height:60px;font-size:22px}
+  .nykaa-amount{font-size:32px}.nykaa-logo{font-size:26px}
+}
+@media(max-width:350px){
+  .card{padding:32px 18px 30px}.card-name{font-size:36px}
+  .celeb-love{font-size:30px}.celeb-kutti{font-size:28px}
+}
+</style>
+</head>
+<body>
+
+<!-- SCENE 1: PASSWORD -->
+<div id="s-pass" class="scene active">
+  <div class="pass-wrap fadeIn">
+    <div class="pass-lock">🔐</div>
+    <div class="pass-title">This is for someone special...</div>
+    <div class="pass-hint">Hint: the day of our first kiss 💋</div>
+    <div class="pass-dots" id="dots"></div>
+    <div class="numpad" id="numpad"></div>
+    <div class="pass-wrong-msg" id="wrongMsg"></div>
+  </div>
+</div>
+
+<!-- SCENE 2: LOVE LETTER -->
+<div id="s-letter" class="scene">
+  <div id="bgHearts1"></div>
+  <div class="letter-card fadeIn">
+    <div class="letter-to">My Dearest Dhisha,</div>
+    <div class="letter-body" id="letterBody"><span class="cursor"></span></div>
+    <div class="letter-sign" id="letterSign">Forever yours, Shiva 💕</div>
+    <button class="letter-next" id="letterNext" onclick="goScene('s-ask')">Continue 💕</button>
+  </div>
+</div>
+
+<!-- SCENE 3: THE ASK -->
+<div id="s-ask" class="scene">
+  <div id="bgHearts2"></div>
+  <div class="card fadeIn">
+    <div class="card-icon">💌</div>
+    <div class="card-hey">Hey Beautiful...</div>
+    <div class="card-name">Dhisha</div>
+    <div class="card-q">Will you be my <em>Valentine?</em> 💕</div>
+    <div class="btns">
+      <button class="btn btn-y" onclick="clickYes()">Yes! 💖</button>
+      <button class="btn btn-n" onclick="clickNo()">No</button>
+    </div>
+  </div>
+</div>
+
+<!-- OOPS OVERLAY -->
+<div id="oops">
+  <div class="oops-box">
+    <div class="oops-face">🥺💕</div>
+    <div class="oops-title">Oops!</div>
+    <div class="oops-msg">That's NOT an option, cutie! 😤💖</div>
+    <div class="oops-sub">There's only one right answer...</div>
+    <div class="oops-ps">PS: You can never say no to being Shiva's Valentine 💝</div>
+    <button class="btn-only" onclick="clickYes()">Yes! 💖</button>
+  </div>
+</div>
+
+<!-- SCENE 4: SCRATCH CARD -->
+<div id="s-scratch" class="scene">
+  <div class="scratch-wrap fadeIn">
+    <div class="scratch-title">You said YES! 🥳</div>
+    <div class="scratch-sub">Now here's a little surprise...</div>
+    <div class="scratch-container">
+      <div class="scratch-reveal">
+        <div class="scratch-promise-icon">🚗✨</div>
+        <div class="scratch-promise">I promise to buy you a<br>Mercedes E-Class<br>by our 4th Valentine's Day 💎<small>Feb 14, 2030 — mark the date!</small></div>
+      </div>
+      <canvas class="scratch-canvas" id="scratchCanvas"></canvas>
+    </div>
+    <div class="scratch-hint" id="scratchHint">☝️ Scratch with your finger to reveal!</div>
+    <button class="scratch-next" id="scratchNext" onclick="goGift()">One more small gift... 🎁</button>
+  </div>
+</div>
+
+<!-- SCENE 5: NYKAA GIFT CARD -->
+<div id="s-gift" class="scene">
+  <div class="gift-wrap">
+    <div class="gift-intro">But wait... 🎁</div>
+    <div class="gift-intro-sub">Something for you to treat yourself today 💅</div>
+
+    <div class="nykaa-card">
+      <div class="nykaa-inner">
+        <div class="nykaa-top">
+          <div class="nykaa-logo">NYKAA</div>
+          <div class="nykaa-badge">GIFT CARD</div>
+        </div>
+        <div class="nykaa-mid">
+          <div class="nykaa-amount"><span>₹</span>2,500</div>
+          <div class="nykaa-label">GIFT CARD VALUE</div>
+        </div>
+        <div class="nykaa-bottom">
+          <div class="nykaa-exp">Expires: 11-Feb-2027</div>
+          <div class="nykaa-heart">💖</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="gift-details">
+      <div class="gift-row">
+        <div class="gift-label">PIN / Voucher Code</div>
+        <div class="gift-value pin">129916</div>
+      </div>
+      <div class="gift-row">
+        <div class="gift-label">Card Number</div>
+        <div class="gift-value">6002940101639088</div>
+      </div>
+      <div class="gift-row">
+        <div class="gift-label">Amount</div>
+        <div class="gift-value">₹ 2,500.00</div>
+      </div>
+      <div class="gift-row">
+        <div class="gift-label">Expiry Date</div>
+        <div class="gift-value">11-Feb-2027</div>
+      </div>
+    </div>
+
+    <div class="gift-btns">
+      <button class="gift-btn gift-btn-dl" onclick="downloadCard()">Save Details 📥</button>
+      <button class="gift-btn gift-btn-next" onclick="goScene('s-celeb');launchHearts();launchConfetti()">Celebrate! 🎉</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCENE 6: CELEBRATION -->
+<div id="s-celeb" class="scene">
+  <div class="celeb-wrap fadeIn">
+    <div class="celeb-top">💖✨💖</div>
+    <div class="celeb-love">I Love You Tooooooo</div>
+    <div class="celeb-kutti">Kuttiii 🥰💕</div>
+    <div class="celeb-forever">~ Forever & Always ~</div>
+    <div class="celeb-ps" id="psNote" style="display:none">ps: you can never say no to being shiva's valentine 😏💕</div>
+  </div>
+</div>
+
+<script>
+function $(id){return document.getElementById(id)}
+function goScene(id){
+  var scenes=document.querySelectorAll('.scene');
+  for(var i=0;i<scenes.length;i++) scenes[i].classList.remove('active');
+  $(id).classList.add('active');
+}
+function makeBgHearts(cid){
+  var c=$(cid);if(!c)return;
+  var g=['💕','💖','💗','💓','❤️','🤍','💘','🌸'];
+  for(var i=0;i<18;i++){
+    var d=document.createElement('div');d.className='bg-heart';d.textContent=g[i%g.length];
+    d.style.left=Math.random()*96+'%';d.style.fontSize=(14+Math.random()*14)+'px';
+    d.style.animationDuration=(8+Math.random()*10)+'s';d.style.animationDelay=(Math.random()*10)+'s';
+    c.appendChild(d);
+  }
+}
+makeBgHearts('bgHearts1');makeBgHearts('bgHearts2');
+
+/* === PASSWORD === */
+var SECRET='14012021',entered='',dotsEl=$('dots'),wrongEl=$('wrongMsg');
+for(var i=0;i<8;i++){var dot=document.createElement('div');dot.className='pass-dot';dotsEl.appendChild(dot)}
+var numpadEl=$('numpad'),keys=['1','2','3','4','5','6','7','8','9','','0','⌫'];
+for(var i=0;i<keys.length;i++){
+  if(keys[i]===''){numpadEl.appendChild(document.createElement('div'));continue}
+  var b=document.createElement('button');b.className='num-btn'+(keys[i]==='⌫'?' del':'');
+  b.textContent=keys[i];b.addEventListener('click',(function(k){return function(){pressKey(k)}})(keys[i]));
+  numpadEl.appendChild(b);
+}
+function pressKey(k){
+  wrongEl.textContent='';
+  if(k==='⌫'){entered=entered.slice(0,-1);updateDots();return}
+  if(entered.length>=8)return;
+  entered+=k;updateDots();
+  if(entered.length===8){
+    if(entered===SECRET){setTimeout(function(){goScene('s-letter');startTyping()},400)}
+    else{
+      wrongEl.textContent='Wrong code! Try again 💕';
+      var d=dotsEl.children;for(var i=0;i<d.length;i++)d[i].classList.add('wrong');
+      setTimeout(function(){entered='';updateDots();for(var i=0;i<d.length;i++)d[i].classList.remove('wrong')},600);
+    }
+  }
+}
+function updateDots(){var d=dotsEl.children;for(var i=0;i<d.length;i++)d[i].classList.toggle('filled',i<entered.length)}
+
+/* === LOVE LETTER === */
+var letterText="You know what's crazy? Out of all the people in this world, my heart just decided — it's you. It's always been you.\n\nEvery moment with you feels like the universe is showing off, like it created something perfect just for us. Your laugh? That's my favorite sound in the entire world. Your smile? That's the reason I believe in magic.\n\nI don't need a special day to tell you this, but today I want the whole world to know — you are my favorite hello and my hardest goodbye.\n\nI promise to love you louder, hold you tighter, and annoy you forever... because that's what soulmates do, right? 😏\n\nHappy Valentine's Day, my love. This is just the beginning of us. 💕";
+var letterIndex=0,letterEl=$('letterBody'),typingStarted=false;
+function startTyping(){
+  if(typingStarted)return;typingStarted=true;
+  letterEl.innerHTML='<span class="cursor"></span>';typeNext();
+}
+function typeNext(){
+  if(letterIndex>=letterText.length){
+    var cur=letterEl.querySelector('.cursor');if(cur)cur.remove();
+    $('letterSign').classList.add('show');
+    setTimeout(function(){$('letterNext').classList.add('show')},600);return;
+  }
+  var ch=letterText[letterIndex],cur=letterEl.querySelector('.cursor');
+  if(ch==='\n'){letterEl.insertBefore(document.createElement('br'),cur)}
+  else{letterEl.insertBefore(document.createTextNode(ch),cur)}
+  letterIndex++;
+  setTimeout(typeNext,ch==='.'||ch==='!'||ch==='?'?180:ch===','?100:ch==='\n'?120:32);
+}
+
+/* === THE ASK === */
+var saidNo=false;
+function clickNo(){saidNo=true;$('oops').style.display='flex'}
+function clickYes(){
+  $('oops').style.display='none';
+  if(saidNo)$('psNote').style.display='block';
+  goScene('s-scratch');initScratch();
+}
+
+/* === SCRATCH === */
+var scratchInited=false;
+function initScratch(){
+  if(scratchInited)return;scratchInited=true;
+  var canvas=$('scratchCanvas'),container=canvas.parentElement;
+  var w=container.offsetWidth,h=container.offsetHeight;
+  canvas.width=w;canvas.height=h;
+  var ctx=canvas.getContext('2d');
+  var grad=ctx.createLinearGradient(0,0,w,h);
+  grad.addColorStop(0,'#ff6b9d');grad.addColorStop(.5,'#ff2d7b');grad.addColorStop(1,'#e74c6f');
+  ctx.fillStyle=grad;ctx.fillRect(0,0,w,h);
+  ctx.fillStyle='rgba(255,255,255,.08)';
+  for(var i=0;i<30;i++){ctx.beginPath();ctx.arc(Math.random()*w,Math.random()*h,Math.random()*20+5,0,Math.PI*2);ctx.fill()}
+  ctx.fillStyle='rgba(255,255,255,.9)';ctx.font='bold 20px Quicksand,sans-serif';ctx.textAlign='center';
+  ctx.fillText('🎁 Scratch Me!',w/2,h/2-10);
+  ctx.font='14px Quicksand,sans-serif';ctx.fillStyle='rgba(255,255,255,.6)';ctx.fillText('A promise awaits...',w/2,h/2+18);
+  ctx.globalCompositeOperation='destination-out';
+  var scratching=false,done=false;
+  function gp(e){var r=canvas.getBoundingClientRect(),t=e.touches?e.touches[0]:e;return{x:t.clientX-r.left,y:t.clientY-r.top}}
+  function sc(e){e.preventDefault();if(!scratching)return;var p=gp(e);ctx.beginPath();ctx.arc(p.x,p.y,22,0,Math.PI*2);ctx.fill();chk()}
+  function chk(){
+    if(done)return;var d=ctx.getImageData(0,0,w,h).data,cl=0;
+    for(var i=3;i<d.length;i+=4)if(d[i]===0)cl++;
+    if(cl/(w*h)>.35){done=true;ctx.fillRect(0,0,w,h);$('scratchHint').textContent='🎉 Promise revealed!';$('scratchNext').classList.add('show')}
+  }
+  canvas.addEventListener('mousedown',function(e){scratching=true;sc(e)});
+  canvas.addEventListener('mousemove',sc);canvas.addEventListener('mouseup',function(){scratching=false});
+  canvas.addEventListener('touchstart',function(e){scratching=true;sc(e)},{passive:false});
+  canvas.addEventListener('touchmove',sc,{passive:false});canvas.addEventListener('touchend',function(){scratching=false});
+}
+
+/* === GIFT CARD === */
+function goGift(){goScene('s-gift')}
+
+function downloadCard(){
+  var text="🎁 Nykaa Gift Card — Valentine's Gift from Shiva 💕\n";
+  text+="━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n";
+  text+="Amount:         ₹ 2,500.00\n";
+  text+="PIN/Voucher:    129916\n";
+  text+="Card Number:    6002940101639088\n";
+  text+="Expiry Date:    11-Feb-2027\n\n";
+  text+="━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n";
+  text+="Redeem at nykaa.com or in the Nykaa app 💅\n";
+  text+="Happy Valentine's Day, Kuttiii! 💖\n";
+
+  var blob=new Blob([text],{type:'text/plain'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='nykaa-gift-card.txt';
+  document.body.appendChild(a);a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
+}
+
+/* === CELEBRATION === */
+function makeHeart(color,size){
+  var d=document.createElement('div');d.className='heart3d';
+  d.innerHTML='<svg width="'+size+'" height="'+size+'" viewBox="0 0 24 24" fill="'+color+'"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>';
+  return d;
+}
+function launchHearts(){
+  var container=$('s-celeb'),colors=['#ff2d7b','#ff6b9d','#e74c6f','#ff85a2','#ffd700','#ff4d8d','#ff91af','#c94277'];
+  var count=0,max=90;
+  function spawn(){
+    if(count>=max)return;
+    var h=makeHeart(colors[Math.floor(Math.random()*colors.length)],20+Math.random()*28);
+    h.style.left=Math.random()*94+'%';h.style.animationDuration=(5+Math.random()*6)+'s';
+    container.appendChild(h);count++;
+    setTimeout(function(){if(h.parentNode)h.parentNode.removeChild(h)},12000);
+  }
+  for(var i=0;i<18;i++)(function(i){setTimeout(spawn,i*90)})(i);
+  var iv=setInterval(function(){if(count>=max){clearInterval(iv);return}spawn()},350);
+}
+function launchConfetti(){
+  var container=$('s-celeb'),cols=['#ff2d7b','#ffd700','#ff6b9d','#ff85a2','#e74c6f','#fff','#ffc0cb','#c94277'];
+  for(var i=0;i<50;i++){(function(i){setTimeout(function(){
+    var c=document.createElement('div');c.className='confetti';c.style.left=Math.random()*100+'%';
+    c.style.background=cols[Math.floor(Math.random()*cols.length)];var s=6+Math.random()*8;
+    c.style.width=s+'px';c.style.height=s+'px';c.style.borderRadius=Math.random()>.5?'50%':'2px';
+    c.style.animationDuration=(2.5+Math.random()*3)+'s';container.appendChild(c);
+    setTimeout(function(){if(c.parentNode)c.parentNode.removeChild(c)},6000);
+  },i*65)})(i)}
+}
+</script>
+</body>
+</html>
